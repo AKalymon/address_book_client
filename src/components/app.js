@@ -13,8 +13,15 @@ import {
 } from "@material-ui/core";
 import CircularProgress from '@material-ui/core/CircularProgress';
 
+/**
+ *
+ */
 export default class App extends React.Component {
 
+    /**
+     *
+     * @param props
+     */
     constructor(props) {
         super(props);
         this.state = {
@@ -27,6 +34,10 @@ export default class App extends React.Component {
         };
     }
 
+    /**
+     *
+     * @returns {Promise<void>}
+     */
     async componentDidMount() {
 
         this.setState({
@@ -104,8 +115,9 @@ export default class App extends React.Component {
                     <DialogContentText component={"span"}>
                             <b> Name: </b> {this.state.selectedPerson.formattedName} <br />
                             <b> Email: </b> {this.state.selectedPerson.email} <br />
+                            <b> Cell: </b> {this.state.selectedPerson.cell} <br />
                             <b> Location: </b> {this.state.selectedPerson.formattedLocation} <br />
-                        <div style={{display: "flex", justifyContent: "center", paddingTop: "15px"}}>
+                            <div style={{display: "flex", justifyContent: "center", paddingTop: "15px"}}>
                                 <img src={typeof this.state.selectedPerson.portrait !== "undefined" ? this.state.selectedPerson.portrait.large : ""}  alt={"portrait"}/>
                             </div>
                         </DialogContentText>
@@ -148,9 +160,15 @@ export default class App extends React.Component {
 
 }
 
-
+/**
+ *
+ */
 class Person {
 
+    /**
+     *
+     * @param userData
+     */
     constructor(userData) {
 
         this.gender = userData.gender;
@@ -158,9 +176,14 @@ class Person {
         this.name = userData.name;
         this.portrait = userData.picture;
         this.location =  userData.location;
+        this.cell = userData.cell;
 
     }
 
+    /**
+     *
+     * @returns {string}
+     */
     get formattedLocation() {
 
         return this.location.street.number + ' ' +
@@ -171,6 +194,11 @@ class Person {
             this.location.country;
 
     }
+
+    /**
+     *
+     * @returns {string}
+     */
     get formattedName() {
         return this.name.title + ' ' + this.name.first + ' ' + this.name.last;
     }
