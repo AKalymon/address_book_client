@@ -88,7 +88,7 @@ export default class App extends React.Component {
         return <div style={{display: "flex", justifyContent: "center", alignItems: "center", height: "90vh"}}>
 
             {/*MATERIAL UI CARD USED FOR BACKGROUND*/}
-            <Card style={{width: "80%"}}>
+            <Card style={{width: "80%", maxWidth: "800px"}}>
 
                 {/*THIS IS THE TITLE OF THE CONTACT LIST*/}
                 <Typography variant={"h5"} style={{padding: '10px'}}>
