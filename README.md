@@ -36,4 +36,4 @@
 - Dynamically loads 4 random contacts and at list level displays their full name 
 - Once contacts are loaded interactive list each name can be clicked
 - Once you click a contact name the 'dialog / modal' menu pop-ups and displays the contacts (name, email, cell, location, & portrait image)
-
+- Given more time I would make the person1, person2 states less static and more dynamic so that it could handle as many contacts as we want and we would not have to declare each and every contact 
