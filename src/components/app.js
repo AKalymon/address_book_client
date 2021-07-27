@@ -25,10 +25,7 @@ export default class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            person1: [], // holder for contact 1
-            person2: [], // holder for contact 2
-            person3: [], // holder for contact 3
-            person4: [], // holder for contact 4
+            peopleArray: [],
             selectedPerson: [], // this is the clicked on contact so that we can pass their data to the dialog / modal
             open: false, // this is whether or not the dialog / modal is open
         };
@@ -40,39 +37,20 @@ export default class App extends React.Component {
      */
     async componentDidMount() {
 
+        let FourPersonArray = await this.queryData();
+
+        let classCreatedPersonArray = FourPersonArray.map((obj) => (
+            new Person(obj)
+        ))
+
         // we can see below that 4 new 'Person' objects are created and the 'this.queryData' function is called on each one
         this.setState({
-            person1:  new Person(await this.queryData()), // when we call this.queryData() we are passing in new profile data to the 'Person' object class
-            person2:  new Person(await this.queryData()),
-            person3:  new Person(await this.queryData()),
-            person4:  new Person(await this.queryData()),
+            peopleArray: classCreatedPersonArray,
         });
 
     }
 
     render() {
-
-        /**
-         * This method is called whenever a user clicks on one of the top-level contact list items
-         * @param event emitted from click and points to a specific contact
-         */
-        const handleClickListItem = (event) => {
-
-            let componentName = event.target.getAttribute('name'); // grab the name attribute we defined below
-            openModal(this.state[componentName]) // open the dialog / modal to display all information
-
-        }
-
-        /**
-         * method for opening the dialog / modal as well as setting the state to the current selected contact
-         * @param personData of the contact that was clicked in list
-         */
-        const openModal = (personData) => {
-            this.setState({
-                open: true, // opens dialog
-                selectedPerson: personData, // sets current target data to display
-            })
-        }
 
         /**
          * This method is called either when 'CLOSE' is hit or the user clicks off the dialog / modal
@@ -98,10 +76,10 @@ export default class App extends React.Component {
                 <Divider flexItem style={{height: "1px"}}/>
 
                 {/*IF THE LAST PERSONS DATA HAS NOT YET LOADED WE DISPLAY A 'CIRCULAR' LOADING ICON*/}
-                {this.state.person4.length < 1 ?
+                {this.state.peopleArray.length < 4 ?
 
                     // again flex is used to centter children
-                    <div style={{display: "flex", justifyContent: "center"}}>\
+                    <div style={{display: "flex", justifyContent: "center"}}>
                         {/*material-ui circular progress used */}
                         <CircularProgress style={{padding: "10px"}}/>
                     </div>
@@ -111,18 +89,18 @@ export default class App extends React.Component {
                     //IF WE HAVE DATA THEN WE CAN LOAD OUR LIST
                     <List>
                         {/*IF I HAD MORE TIME I WOULD MAKE THIS DYNAMIC AND USE SOMETHING LIKE .MAP IN ORDER TO HAVE A SINGLE <ListItem /> */}
-                        <ListItem name={"person1"} button onClick={handleClickListItem}> {/*each list item has its own onClick, name, and inner HTML contents*/}
-                            {this.state.person1.formattedName}
-                        </ListItem>
-                        <ListItem name={"person2"} button onClick={handleClickListItem}>
-                            {this.state.person2.formattedName}
-                        </ListItem>
-                        <ListItem name={"person3"} button onClick={handleClickListItem}>
-                            {this.state.person3.formattedName}
-                        </ListItem>
-                        <ListItem name={"person4"} button onClick={handleClickListItem}>
-                            {this.state.person4.formattedName}
-                        </ListItem>
+                        {this.state.peopleArray.map((obj, index) => (
+                            <ListItem key={index} name={obj.formattedName} button onClick={() => {
+                                this.setState({
+                                    open: true, // close dialog
+                                    selectedPerson: obj, // reset target contact data
+                                })
+                            }}>
+                                {obj.formattedName}
+                            </ListItem>
+
+                        ))}
+
                     </List>
 
                 }
@@ -153,9 +131,7 @@ export default class App extends React.Component {
                     </Button>
                 </DialogActions>
             </Dialog>
-
         </div>
-
 
     }
 
@@ -174,9 +150,9 @@ export default class App extends React.Component {
             const axios = require('axios');
 
             // send get request and handle response
-            axios.get('https://randomuser.me/api/').then((response) => {
+            axios.get('https://randomuser.me/api/?results=10&seed=foobar').then((response) => {
 
-                resolve(response.data.results[0]); // resolve promise with data
+                resolve(response.data.results);
 
             }).catch((error) => {
 
@@ -184,10 +160,7 @@ export default class App extends React.Component {
 
             })
 
-
         })
-
-
 
     }
 
